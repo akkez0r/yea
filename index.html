@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Jesper.live — free browser games. Play CS Case Clicker, an idle clicker themed around CS2 cases, and a full chess game with AI opponent. No downloads, no sign-up.">
+  <meta name="keywords" content="browser games, free games, clicker game, chess online, CS2 cases, idle game">
+  <meta property="og:title" content="Jesper.live — Free Browser Games">
+  <meta property="og:description" content="Play CS Case Clicker and Chess directly in your browser. No downloads, no sign-up.">
+  <meta property="og:type" content="website">
+  <title>Jesper.live — Free Browser Games | CS Case Clicker &amp; Chess</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Google AdSense: replace ca-pub-XXXXXXXXXXXXXXXX with your real publisher ID -->
+  <script async src="https://pagead2.googleapis.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+  <style>
+    .hero {
+      text-align: center;
+      padding: 90px 24px 56px;
+      animation: fadeInUp 0.6s ease both;
+    }
+    .hero-label {
+      display: inline-block;
+      font-family: var(--font-head);
+      font-size: 0.68rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid rgba(0,229,160,0.35);
+      padding: 6px 18px;
+      border-radius: 99px;
+      margin-bottom: 26px;
+      background: rgba(0,229,160,0.05);
+    }
+    .hero h1 {
+      font-family: var(--font-head);
+      font-size: clamp(2.6rem, 8vw, 5.2rem);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.05;
+      margin-bottom: 18px;
+      text-shadow: 0 0 50px rgba(0,229,160,0.25);
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p {
+      font-size: 1.12rem;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .games-section { padding: 10px 24px 30px; max-width: 980px; margin: 0 auto; width: 100%; }
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 26px;
+    }
+    .game-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+      animation: fadeInUp 0.6s ease both;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+    .game-card:nth-child(2) { animation-delay: 0.12s; }
+    .game-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 44px rgba(0,229,160,0.16);
+    }
+    .game-card-preview {
+      height: 190px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-cs .game-card-preview { background: linear-gradient(135deg, #181b2b 0%, #0f1a2b 100%); }
+    .card-cs .game-card-preview::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 55%, rgba(245,166,35,0.18) 0%, transparent 65%);
+    }
+    .card-chess .game-card-preview { background: linear-gradient(135deg, #181b2b 0%, #190f33 100%); }
+    .card-chess .game-card-preview::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 55%, rgba(124,58,237,0.22) 0%, transparent 65%);
+    }
+    .preview-icon {
+      position: relative; z-index: 1;
+      filter: drop-shadow(0 0 18px rgba(255,255,255,0.25));
+      animation: float 3.2s ease-in-out infinite;
+    }
+    .game-card-body { padding: 22px 24px 24px; display: flex; flex-direction: column; flex: 1; }
+    .game-card-body h2 { font-family: var(--font-head); font-size: 1.12rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .game-card-body p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.55; flex: 1; }
+    .game-card-footer { display: flex; align-items: center; justify-content: space-between; }
+    .play-btn {
+      padding: 10px 22px;
+      background: var(--accent);
+      color: #02110b;
+      border: none;
+      border-radius: 9px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: box-shadow 0.2s, transform 0.12s;
+    }
+    .play-btn:hover { box-shadow: 0 0 22px rgba(0,229,160,0.45); }
+    .play-btn:active { transform: scale(0.97); }
+    .card-chess .play-btn { background: var(--accent2); color: #fff; }
+    .card-chess .play-btn:hover { box-shadow: 0 0 24px rgba(124,58,237,0.55); }
+
+    /* About / content sections */
+    .content-section { max-width: 760px; margin: 0 auto; padding: 30px 24px; }
+    .content-section h2 {
+      font-family: var(--font-head);
+      font-size: 1.25rem;
+      color: #fff;
+      margin-bottom: 14px;
+    }
+    .content-section p { color: var(--text-muted); margin-bottom: 14px; font-size: 0.95rem; }
+    .content-section h3 { color: var(--accent); font-size: 1rem; margin: 22px 0 8px; }
+
+    .faq-item { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; background: var(--bg2); }
+    .faq-item summary {
+      padding: 14px 18px;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text);
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-item summary::after { content: '+'; color: var(--accent); font-size: 1.2rem; font-weight: 400; }
+    .faq-item[open] summary::after { content: '–'; }
+    .faq-item div { padding: 0 18px 14px; color: var(--text-muted); font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="./" class="nav-brand">JESPER.LIVE</a>
+    <div class="nav-links">
+      <a href="./" class="active">Home</a>
+      <a href="cs-case-clicker/">CS Clicker</a>
+      <a href="chess/">Chess</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-label">Free Browser Games</div>
+      <h1>JESPER<span>.</span>LIVE</h1>
+      <p>Hand-built browser games — no downloads, no sign-ups, no paywalls. Just open a game and play.</p>
+    </section>
+
+    <section class="games-section">
+      <div class="games-grid">
+        <div class="game-card card-cs" onclick="location.href='cs-case-clicker/'">
+          <div class="game-card-preview"><span class="preview-icon">📦</span></div>
+          <div class="game-card-body">
+            <h2>CS Case Clicker</h2>
+            <p>An idle clicker themed around CS2 weapon cases. Click to earn Euros, buy real cases from the shop, and every case you own boosts your earnings per click. Progress saves automatically.</p>
+            <div class="game-card-footer">
+              <button class="play-btn">Play Now</button>
+              <span class="badge badge-accent">Idle / Clicker</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="game-card card-chess" onclick="location.href='chess/'">
+          <div class="game-card-preview"><span class="preview-icon">♛</span></div>
+          <div class="game-card-body">
+            <h2>Chess</h2>
+            <p>A complete chess game with all the real rules — castling, en passant, promotion, check and checkmate detection. Play against a friend on the same device or challenge the built-in AI.</p>
+            <div class="game-card-footer">
+              <button class="play-btn">Play Now</button>
+              <span class="badge badge-purple">2 Player / vs AI</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ad slot (homepage) — replace data-ad-client / data-ad-slot with your values -->
+    <div class="ad-slot">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="0000000000"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <section class="content-section">
+      <h2>About Jesper.live</h2>
+      <p>Jesper.live is a small personal gaming site where every game is built from scratch with plain HTML, CSS and JavaScript. There are no accounts, no installs and no tracking beyond what's needed to save your game progress locally in your own browser.</p>
+
+      <h3>CS Case Clicker — how it works</h3>
+      <p>You start with nothing but a clickable case. Every click earns you fake Euros. Spend those Euros in the shop on real CS2 cases — from the humble Recoil Case all the way up to the Operation Riptide Case. Each case you own permanently increases how much you earn per click, so your collection literally pays for itself. The game includes anti-autoclicker protection, so you'll have to earn your fortune with honest fingers. Your balance and inventory are saved in your browser, so you can close the tab and pick up where you left off.</p>
+
+      <h3>Chess — how it works</h3>
+      <p>The chess game implements the full rules of chess: legal move highlighting, castling, en passant captures, pawn promotion, and automatic check, checkmate and stalemate detection. You can play a local two-player match by passing the device back and forth, or switch to single-player mode and face a built-in AI opponent. A move history panel records the whole game in standard notation as you play.</p>
+
+      <h3>Frequently asked questions</h3>
+      <details class="faq-item">
+        <summary>Do I need to create an account?</summary>
+        <div>No. Everything runs directly in your browser. Game progress (like your Case Clicker balance) is stored locally on your device using your browser's storage.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Does this work on mobile?</summary>
+        <div>Yes — both games are fully responsive and playable on phones, tablets and desktops.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Is any of this real money or real CS2 items?</summary>
+        <div>No. The Euros in CS Case Clicker are entirely fictional and the cases are just images. Nothing on this site involves real currency, gambling or real game items.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Will more games be added?</summary>
+        <div>That's the plan! Jesper.live is an ongoing hobby project and new games get added when they're ready.</div>
+      </details>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="./">Home</a>
+      <a href="cs-case-clicker/">CS Case Clicker</a>
+      <a href="chess/">Chess</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+    <p>© 2026 Jesper.live — Built with vanilla HTML, CSS &amp; JavaScript. Contact: <a href="mailto:akramsandman791@gmail.com">akramsandman791@gmail.com</a></p>
+  </footer>
+</body>
+</html>
