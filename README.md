@@ -32,11 +32,13 @@ GitHub Pages works too: **Settings → Pages → Deploy from branch**, pick your
 
 ## Google AdSense setup
 
-The AdSense integration is wired up but uses **placeholder IDs that you must replace**, otherwise ads will not serve:
+AdSense is fully wired in with publisher ID `ca-pub-4854590447352624` and ad unit `7531125407`:
 
-1. **Publisher ID** — in every HTML page (`index.html`, `privacy.html` excluded, both game pages), replace `ca-pub-XXXXXXXXXXXXXXXX` with your real publisher ID from [AdSense → Account → Account information](https://www.google.com/adsense/).
-2. **Ad slot IDs** — replace `data-ad-slot="0000000000"` in each `<ins class="adsbygoogle">` block with real ad unit IDs (AdSense → Ads → By ad unit → create a Display ad).
-3. **ads.txt** — edit `/ads.txt` and replace `pub-XXXXXXXXXXXXXXXX` with your publisher ID. It must be served from the root of your domain (`https://jesper.live/ads.txt`).
+- The AdSense loader script is in the `<head>` of the homepage and both game pages.
+- Each of those pages has one responsive display ad unit (`<ins class="adsbygoogle">`).
+- `/ads.txt` contains the matching `pub-4854590447352624` entry and must be reachable at `https://jesper.live/ads.txt` after deploy.
+
+To add more ad placements, create additional ad units in AdSense → Ads → By ad unit and copy the new `data-ad-slot` value into a new `<ins>` block.
 
 ### If AdSense rejects the site ("low value content" / "site not ready")
 
