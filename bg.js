@@ -22,10 +22,15 @@
   }
 
   const canvas = document.getElementById('bg-canvas');
-  if (!canvas || !canvas.getContext) return;
+  if (!canvas || typeof canvas.getContext !== 'function') return;
+  // getContext can return null (no 2d support, too many live contexts).
+  // The aurora/grid/vignette layers are already in the DOM, so the
+  // background still looks right — we just skip the particle field.
   const ctx = canvas.getContext('2d');
+  if (!ctx) return;
 
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduced = typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const LINK_DIST = 132;     // px within which particles connect
   const MOUSE_DIST = 170;    // cursor influence radius

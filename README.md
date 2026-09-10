@@ -1,11 +1,15 @@
 # Jesper.live
 
-A personal gaming site with two playable browser games, built entirely with vanilla HTML, CSS and JavaScript. No frameworks, no build step, no backend — just static files.
+A personal gaming site with four playable browser games, built entirely with vanilla HTML, CSS and JavaScript. No frameworks, no build step, no backend — just static files.
+
+Every page shares an animated background (`bg.js`): drifting aurora blobs, an interactive particle constellation on canvas, a scrolling grid and a vignette. It honors `prefers-reduced-motion`, scales particle count to the viewport, and stops rendering while the tab is hidden.
 
 ## Games
 
 - **CS Case Clicker** (`/cs-case-clicker/`) — an idle clicker themed around CS2 cases. Click to earn Euros, buy cases, and each case permanently boosts your earnings per click. Includes anti-autoclicker protection (rate limiting, randomized cooldowns, randomized hitbox) and localStorage save.
 - **Chess** (`/chess/`) — full chess implementation: legal move highlighting, castling, en passant, pawn promotion picker, check/checkmate/stalemate detection, move history in algebraic notation, captured pieces panel. Play local 2-player or against a built-in minimax AI.
+- **Snake** (`/snake/`) — canvas arcade snake with a neon glow trail, speed ramping, pause, swipe support and a localStorage high score. 180° reversals are rejected rather than fatal.
+- **2048** (`/2048/`) — slide-and-merge tile puzzle with animated tile movement, win-at-2048 with a keep-playing option, game-over detection, swipe support and a saved best score.
 
 ## Structure
 
@@ -15,9 +19,11 @@ style.css                   Shared global styles
 privacy.html                Privacy policy (required for AdSense)
 ads.txt                     AdSense seller verification
 robots.txt / sitemap.xml    SEO
-cs-case-clicker/index.html  Game 1 (self-contained)
-chess/index.html            Game 2 (self-contained)
-assets/                     Static assets
+bg.js                       Shared animated background
+cs-case-clicker/            index.html + game.js
+chess/                      index.html + chess.js  (engine)
+snake/                      index.html + game.js
+2048/                       index.html + game.js
 ```
 
 ## Deploy to Cloudflare Pages
@@ -60,3 +66,18 @@ No tooling needed — open `index.html` in a browser, or serve the folder:
 ```bash
 python3 -m http.server 8000
 ```
+
+## Tests
+
+There is no test framework and no CI — the games are verified with throwaway
+[jsdom](https://github.com/jsdom/jsdom) scripts run by hand (`npm i jsdom --no-save`):
+
+- **Chess** — `perft` node counts from the start position (`20 / 400 / 8902 / 197281`),
+  plus the "Kiwipete" and en-passant reference positions, which together exercise
+  castling rights, en passant, promotion and pinned pieces.
+- **2048** — merge rules (each tile merges at most once per move, so `4,4,4 → 8,4`
+  not `12`), direction handling, scoring, and that a no-op move doesn't spawn a tile.
+- **Snake** — growth and scoring on eating, wall and self collision, that moving into
+  the vacating tail tip is legal, and that a 180° reversal is ignored.
+- **Site-wide** — every internal `href`/`src` resolves to a real file, every page has
+  the full nav and footer, and every DOM id the game scripts reference exists in its markup.
