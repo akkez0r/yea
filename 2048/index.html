@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Play 2048 free in your browser — slide and merge numbered tiles to reach 2048. Works with arrow keys or swipe on mobile.">
+  <meta name="theme-color" content="#05060d">
+  <title>2048 — Jesper.live</title>
+  <link rel="stylesheet" href="../style.css">
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4854590447352624" crossorigin="anonymous"></script>
+  <style>
+    .wrap { flex: 1; max-width: 620px; margin: 0 auto; width: 100%; padding: 24px 16px 34px; }
+
+    /* ── Header row ── */
+    .top {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      gap: 14px; flex-wrap: wrap; margin-bottom: 18px;
+    }
+    .title-block h1 {
+      font-family: var(--head);
+      font-size: clamp(2rem, 7vw, 2.9rem);
+      font-weight: 900; line-height: 1;
+      background: linear-gradient(100deg, var(--gold), var(--accent) 70%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .title-block p { font-size: 0.83rem; color: var(--muted); margin-top: 4px; }
+
+    .scores { display: flex; gap: 10px; position: relative; }
+    .score-box {
+      background: var(--bg2);
+      backdrop-filter: var(--blur);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 18px; min-width: 88px; text-align: center;
+    }
+    .score-box .k {
+      font-family: var(--head); font-size: 0.58rem;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+    }
+    .score-box .v { font-family: var(--head); font-size: 1.3rem; font-weight: 700; }
+    #score { color: var(--accent); }
+    #best  { color: var(--gold); }
+
+    .gain {
+      position: absolute; left: 50%; top: -4px;
+      transform: translateX(-50%);
+      font-family: var(--head); font-weight: 700; font-size: 1.05rem;
+      color: var(--accent); opacity: 0; pointer-events: none;
+    }
+    .gain.show { animation: gainUp 0.7s ease forwards; }
+    @keyframes gainUp {
+      0%   { opacity: 1; transform: translate(-50%, 0); }
+      100% { opacity: 0; transform: translate(-50%, -34px); }
+    }
+
+    .bar { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; }
+    .bar .hint { font-size: 0.8rem; color: var(--muted); margin-left: auto; }
+
+    /* ── Board ── */
+    .board-wrap { position: relative; }
+    .board {
+      --gap: 5px;
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      background: var(--bg2);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: var(--gap);
+      box-shadow: var(--shadow);
+      touch-action: none;
+      user-select: none;
+      overflow: hidden;
+    }
+    .cell, .tile {
+      position: absolute;
+      width: 25%; height: 25%;
+      padding: var(--gap);
+      top: var(--gap); left: var(--gap);
+      /* board padding is included by top/left; size is 25% of the padded box */
+      transform: translate(calc(var(--c) * 100%), calc(var(--r) * 100%));
+    }
+    /* size cells relative to the inner area */
+    .board { --inner: calc(100% - var(--gap) * 2); }
+    .cell, .tile { width: calc((100% - var(--gap) * 2) / 4); height: calc((100% - var(--gap) * 2) / 4); }
+
+    .cell-inner {
+      width: 100%; height: 100%;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .tile { z-index: 2; transition: transform 0.12s cubic-bezier(.3,.8,.4,1); }
+    .tile-inner {
+      width: 100%; height: 100%;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--head);
+      font-weight: 700;
+      font-size: clamp(1.1rem, 6.4vw, 2rem);
+      color: #06121c;
+    }
+    .tile-inner.t-md { font-size: clamp(0.95rem, 5.4vw, 1.7rem); }
+    .tile-inner.t-sm { font-size: clamp(0.75rem, 4.2vw, 1.3rem); }
+
+    /* tile colour ramp */
+    .tile[data-val="2"]    .tile-inner { background: #cfd6e6; }
+    .tile[data-val="4"]    .tile-inner { background: #b9c6df; }
+    .tile[data-val="8"]    .tile-inner { background: #6ee7c4; }
+    .tile[data-val="16"]   .tile-inner { background: #34d9a4; }
+    .tile[data-val="32"]   .tile-inner { background: #00f5b4; box-shadow: 0 0 18px rgba(0,245,180,0.45); }
+    .tile[data-val="64"]   .tile-inner { background: #38bdf8; box-shadow: 0 0 20px rgba(56,189,248,0.5); }
+    .tile[data-val="128"]  .tile-inner { background: #818cf8; color: #fff; box-shadow: 0 0 22px rgba(129,140,248,0.55); }
+    .tile[data-val="256"]  .tile-inner { background: #a06bff; color: #fff; box-shadow: 0 0 24px rgba(160,107,255,0.6); }
+    .tile[data-val="512"]  .tile-inner { background: #ff5fa8; color: #fff; box-shadow: 0 0 26px rgba(255,95,168,0.6); }
+    .tile[data-val="1024"] .tile-inner { background: #ff8a3d; color: #fff; box-shadow: 0 0 28px rgba(255,138,61,0.65); }
+    .tile[data-val="2048"] .tile-inner { background: #ffb020; color: #2a1600; box-shadow: 0 0 34px rgba(255,176,32,0.85); }
+    .tile[data-val="4096"] .tile-inner { background: #fff08a; color: #2a1600; box-shadow: 0 0 38px rgba(255,240,138,0.9); }
+
+    .tile-new    { animation: tilePop 0.16s ease; }
+    .tile-merged .tile-inner { animation: mergePop 0.16s ease; }
+    @keyframes tilePop  { from { transform: scale(0.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @keyframes mergePop { 0% { transform: scale(1); } 55% { transform: scale(1.18); } 100% { transform: scale(1); } }
+
+    /* ── Overlay ── */
+    .overlay {
+      position: absolute; inset: 0;
+      display: none;
+      flex-direction: column; align-items: center; justify-content: center;
+      gap: 8px; border-radius: 16px; z-index: 10;
+      background: rgba(5,6,13,0.86);
+      backdrop-filter: blur(6px);
+      text-align: center; padding: 20px;
+    }
+    .overlay.active { display: flex; animation: riseIn 0.3s ease; }
+    .overlay h2 {
+      font-family: var(--head); font-size: 1.35rem; font-weight: 900;
+    }
+    .overlay.win  h2 { color: var(--gold); text-shadow: 0 0 26px rgba(255,176,32,0.7); }
+    .overlay.lose h2 { color: var(--danger); }
+    .overlay p { color: var(--muted); font-size: 0.9rem; }
+    .ov-btns { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; justify-content: center; }
+    .ov-btn {
+      padding: 10px 20px; border-radius: 10px; border: 1px solid transparent;
+      font-weight: 700; font-size: 0.86rem; transition: transform .14s, box-shadow .2s;
+    }
+    .ov-btn:hover { transform: translateY(-2px); }
+    .ov-btn.primary { background: var(--accent); color: #01130d; box-shadow: 0 4px 20px rgba(0,245,180,0.35); }
+    .ov-btn.ghost { background: transparent; border-color: var(--border); color: var(--text); }
+    .ov-btn.ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    .how { margin-top: 20px; font-size: 0.86rem; color: var(--muted); }
+    .how b { color: var(--text); }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="../" class="nav-brand">JESPER.LIVE</a>
+    <div class="nav-links">
+      <a href="../">Home</a>
+      <a href="../cs-case-clicker/">Clicker</a>
+      <a href="../chess/">Chess</a>
+      <a href="../snake/">Snake</a>
+      <a href="./" class="active">2048</a>
+    </div>
+  </nav>
+
+  <div class="wrap">
+    <div class="top">
+      <div class="title-block">
+        <h1>2048</h1>
+        <p>Merge tiles to reach 2048.</p>
+      </div>
+      <div class="scores">
+        <div class="gain" id="gain"></div>
+        <div class="score-box"><div class="k">Score</div><div class="v" id="score">0</div></div>
+        <div class="score-box"><div class="k">Best</div><div class="v" id="best">0</div></div>
+      </div>
+    </div>
+
+    <div class="bar">
+      <button class="btn btn-primary" id="new-game" style="padding:9px 20px;font-size:0.85rem">New Game</button>
+      <span class="hint">Arrow keys / WASD · swipe on mobile</span>
+    </div>
+
+    <div class="board-wrap">
+      <div class="board" id="board">
+        <div id="tile-layer"></div>
+      </div>
+      <div class="overlay" id="overlay">
+        <h2 id="over-title"></h2>
+        <p id="over-sub"></p>
+        <div class="ov-btns" id="over-btns"></div>
+      </div>
+    </div>
+
+    <p class="how">
+      <b>How to play:</b> Use the arrow keys (or swipe) to slide every tile. When two tiles
+      with the same number touch, they merge into one. Reach the <b>2048</b> tile to win —
+      then keep going for a higher score.
+    </p>
+
+    <!-- Ad slot -->
+    <div class="ad-slot">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-4854590447352624"
+           data-ad-slot="7531125407"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="../">Home</a>
+      <a href="../cs-case-clicker/">CS Case Clicker</a>
+      <a href="../chess/">Chess</a>
+      <a href="../snake/">Snake</a>
+      <a href="./">2048</a>
+      <a href="../privacy.html">Privacy Policy</a>
+    </div>
+    <p>© 2026 Jesper.live</p>
+  </footer>
+
+  <script src="../bg.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

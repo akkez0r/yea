@@ -3,5 +3,7 @@
   <url><loc>https://jesper.live/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
   <url><loc>https://jesper.live/cs-case-clicker/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://jesper.live/chess/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://jesper.live/snake/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://jesper.live/2048/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://jesper.live/privacy.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
 </urlset>

@@ -253,6 +253,18 @@ a.nav-brand:hover { text-decoration: none; filter: drop-shadow(0 0 26px rgba(0,2
   box-shadow: 0 4px 22px rgba(160,107,255,0.3);
 }
 .btn-violet:hover { box-shadow: 0 6px 34px rgba(160,107,255,0.55); transform: translateY(-2px); }
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold), #e08900);
+  color: #2a1600;
+  box-shadow: 0 4px 22px rgba(255,176,32,0.3);
+}
+.btn-gold:hover { box-shadow: 0 6px 34px rgba(255,176,32,0.55); transform: translateY(-2px); }
+.btn-pink {
+  background: linear-gradient(135deg, var(--pink), #d93d84);
+  color: #fff;
+  box-shadow: 0 4px 22px rgba(255,95,168,0.3);
+}
+.btn-pink:hover { box-shadow: 0 6px 34px rgba(255,95,168,0.55); transform: translateY(-2px); }
 .btn-ghost {
   background: var(--bg3);
   border-color: var(--border);
@@ -271,6 +283,8 @@ a.nav-brand:hover { text-decoration: none; filter: drop-shadow(0 0 26px rgba(0,2
 }
 .badge-accent { background: rgba(0,245,180,0.12); color: var(--accent); border-color: rgba(0,245,180,0.3); }
 .badge-violet { background: rgba(160,107,255,0.14); color: #c4a3ff; border-color: rgba(160,107,255,0.32); }
+.badge-gold   { background: rgba(255,176,32,0.13); color: var(--gold); border-color: rgba(255,176,32,0.32); }
+.badge-pink   { background: rgba(255,95,168,0.13); color: #ff8cc2; border-color: rgba(255,95,168,0.32); }
 
 /* ==========================================================
    ADS

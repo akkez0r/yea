@@ -136,8 +136,12 @@
     .game-card:hover::before { opacity: 1; }
     .card-cs    { --glow: var(--gold); }
     .card-chess { --glow: var(--violet); }
+    .card-snake { --glow: var(--accent); }
+    .card-2048  { --glow: var(--pink); }
     .card-cs:hover    { box-shadow: 0 16px 50px rgba(255,176,32,0.2); }
     .card-chess:hover { box-shadow: 0 16px 50px rgba(160,107,255,0.24); }
+    .card-snake:hover { box-shadow: 0 16px 50px rgba(0,245,180,0.22); }
+    .card-2048:hover  { box-shadow: 0 16px 50px rgba(255,95,168,0.22); }
 
     .card-art {
       height: 200px;
@@ -157,6 +161,16 @@
       background:
         radial-gradient(circle at 50% 58%, rgba(160,107,255,0.26), transparent 62%),
         linear-gradient(150deg, rgba(26,18,44,0.6), rgba(12,14,26,0.6));
+    }
+    .card-snake .card-art {
+      background:
+        radial-gradient(circle at 50% 58%, rgba(0,245,180,0.22), transparent 62%),
+        linear-gradient(150deg, rgba(10,32,28,0.6), rgba(12,14,26,0.6));
+    }
+    .card-2048 .card-art {
+      background:
+        radial-gradient(circle at 50% 58%, rgba(255,95,168,0.24), transparent 62%),
+        linear-gradient(150deg, rgba(38,16,32,0.6), rgba(12,14,26,0.6));
     }
     /* sweeping shine on hover */
     .card-art::after {
@@ -235,8 +249,10 @@
     <a href="./" class="nav-brand">JESPER.LIVE</a>
     <div class="nav-links">
       <a href="./" class="active">Home</a>
-      <a href="cs-case-clicker/">CS Clicker</a>
+      <a href="cs-case-clicker/">Clicker</a>
       <a href="chess/">Chess</a>
+      <a href="snake/">Snake</a>
+      <a href="2048/">2048</a>
     </div>
   </nav>
 
@@ -246,13 +262,15 @@
       <h1>JESPER.LIVE</h1>
       <p>Hand-built browser games — no downloads, no sign-ups, no paywalls. Pick a game and play instantly.</p>
       <div class="hero-cta">
-        <a href="cs-case-clicker/" class="btn btn-primary">📦 Play Case Clicker</a>
-        <a href="chess/" class="btn btn-violet">♛ Play Chess</a>
+        <a href="cs-case-clicker/" class="btn btn-primary">📦 Case Clicker</a>
+        <a href="chess/" class="btn btn-violet">♛ Chess</a>
+        <a href="snake/" class="btn btn-ghost">🐍 Snake</a>
+        <a href="2048/" class="btn btn-gold">🔢 2048</a>
       </div>
     </section>
 
     <div class="stat-strip">
-      <div><div class="n">2</div><div class="l">Games</div></div>
+      <div><div class="n">4</div><div class="l">Games</div></div>
       <div><div class="n">0€</div><div class="l">Cost</div></div>
       <div><div class="n">∞</div><div class="l">Replays</div></div>
       <div><div class="n">100%</div><div class="l">In Browser</div></div>
@@ -283,6 +301,30 @@
             </div>
           </div>
         </article>
+
+        <article class="game-card card-snake" onclick="location.href='snake/'">
+          <div class="card-art"><span class="card-icon">🐍</span></div>
+          <div class="card-body">
+            <h2>Snake</h2>
+            <p>The arcade classic with a neon glow trail. Eat, grow, and speed up with every bite — one wall or one wrong turn into your own tail ends the run. Your best score is saved.</p>
+            <div class="card-foot">
+              <span class="btn btn-primary" style="padding:9px 20px;font-size:0.85rem">Play Now</span>
+              <span class="badge badge-accent">Arcade</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="game-card card-2048" onclick="location.href='2048/'">
+          <div class="card-art"><span class="card-icon">🔢</span></div>
+          <div class="card-body">
+            <h2>2048</h2>
+            <p>Slide the grid and merge matching tiles to build your way up to 2048. Easy to start, hard to master — play with the arrow keys or swipe on your phone.</p>
+            <div class="card-foot">
+              <span class="btn btn-gold" style="padding:9px 20px;font-size:0.85rem">Play Now</span>
+              <span class="badge badge-gold">Puzzle</span>
+            </div>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -306,6 +348,12 @@
 
       <h3>Chess — how it works</h3>
       <p>The chess game implements the full rules of chess: legal move highlighting, castling, en passant captures, pawn promotion, and automatic check, checkmate and stalemate detection. You can play a local two-player match by passing the device back and forth, or switch to single-player mode and face a built-in AI opponent. A move history panel records the whole game in standard notation as you play.</p>
+
+      <h3>Snake — how it works</h3>
+      <p>The arcade classic, rebuilt on canvas with a neon glow trail. Steer with the arrow keys, WASD, or by swiping on a phone. Every pink dot you eat is worth 10 points, adds a segment to your tail, and nudges the snake slightly faster — so the game gets harder exactly as your tail gets longer. Hitting a wall or your own body ends the run, and your best score is kept in your browser. A 180-degree reversal is ignored rather than being an instant loss, so a mistimed key press won't kill you.</p>
+
+      <h3>2048 — how it works</h3>
+      <p>Slide the whole grid with the arrow keys (or a swipe) and matching tiles merge into their sum. Every move drops a new tile onto a free square, so space runs out as your numbers climb — the challenge is keeping the board tidy while you build toward the 2048 tile. Reach it and you can stop there or keep playing for a higher score. Each tile only merges once per move, so a row of four 8s becomes two 16s rather than a single 32. Your best score is saved locally.</p>
 
       <h3>Frequently asked questions</h3>
       <details class="faq">
@@ -332,6 +380,8 @@
       <a href="./">Home</a>
       <a href="cs-case-clicker/">CS Case Clicker</a>
       <a href="chess/">Chess</a>
+      <a href="snake/">Snake</a>
+      <a href="2048/">2048</a>
       <a href="privacy.html">Privacy Policy</a>
     </div>
     <p>© 2026 Jesper.live — Built with vanilla HTML, CSS &amp; JavaScript. Contact: <a href="mailto:akramsandman791@gmail.com">akramsandman791@gmail.com</a></p>
